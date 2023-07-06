@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Meike Steinhilber" />
+
+<meta name="date" content="2023-07-06" />
+
+<title>Sequential One-Way ANOVA</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Sequential One-Way ANOVA</h1>
+<h4 class="author">Meike Steinhilber</h4>
+<h4 class="date">2023-07-06</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#overview" id="toc-overview">Overview</a></li>
+<li><a href="#what-is-a-sequential-test-procedure" id="toc-what-is-a-sequential-test-procedure">What is a sequential test
+procedure?</a></li>
+<li><a href="#what-is-the-sequential-one-way-anova" id="toc-what-is-the-sequential-one-way-anova">What is the sequential
+one-way ANOVA?</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <code>sprtt</code> package is a <strong>s</strong>equential
+<strong>p</strong>robability <strong>r</strong>atio
+<strong>t</strong>ests <strong>t</strong>oolbox
+(<strong>sprtt</strong>). This vignette describes the theoretical
+background of these tests.</p>
+<p>Other recommended vignettes cover:</p>
+<ul>
+<li><p>a <a href="https://meikesteinhilber.github.io/sprtt/articles/usage-sprtt.html">general
+guide</a>, how to use the package and</p></li>
+<li><p>an extended <a href="https://meikesteinhilber.github.io/sprtt/articles/use-case.html">use
+case</a>.</p></li>
+</ul>
+</div>
+<div id="what-is-a-sequential-test-procedure" class="section level2">
+<h2>What is a sequential test procedure?</h2>
+<p>With a sequential approach, data is continuously collected and an
+analysis is performed after each data point, which can lead to three
+different results <span class="citation">(A. Wald, 1945)</span>:</p>
+<ul>
+<li><p>The data collection is <em>terminated</em> because enough
+evidence has been collected for the null hypothesis
+(H<sub>0</sub>).</p></li>
+<li><p>The data collection is <em>terminated</em> because enough
+evidence has been collected for the alternative hypothesis
+(H<sub>1</sub>).</p></li>
+<li><p>The data collection <em>will continue</em> as there is not yet
+enough evidence for either of the two hypotheses.</p></li>
+</ul>
+<p>Basically it is not necessary to perform an analysis after each data
+point — several data points can also be added at once. However, this
+affects the sample size (N) and the error rates <span class="citation">(Schnuerch et al., 2020)</span>.</p>
+<p>The efficiency of sequential designs has already been examined.
+Reductions in the sample by 50% and more were found in comparison to
+analyses with fixed sample sizes <span class="citation">(Schnuerch et
+al., 2020; A. Wald, 1945)</span>. Sequential hypothesis testing is
+therefore particularly suitable when resources are limited because the
+required sample size is reduced without compromising predefined error
+probabilities.</p>
+</div>
+<div id="what-is-the-sequential-one-way-anova" class="section level2">
+<h2>What is the sequential one-way ANOVA?</h2>
+<p>The sequential one-way fixed effects ANOVA is based on the Sequential
+Probability Ratio Test (SPRT) by Abraham <span class="citation">Abraham
+Wald (1947)</span>, which is a highly efficient sequential hypothesis
+test. It can be used instead of <em>t</em>-tests if the means of two or
+more groups are compared. For detailed information see the public
+preprint <span class="citation">(Steinhilber et al., 2023)</span>.</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-schnuerch2020a" class="csl-entry">
+Schnuerch, M., Erdfelder, E., &amp; Heck, D. W. (2020). Sequential
+hypothesis tests for multinomial processing tree models. <em>Journal of
+Mathematical Psychology</em>, <em>95</em>, 102326. <a href="https://doi.org/10.1016/j.jmp.2020.102326">https://doi.org/10.1016/j.jmp.2020.102326</a>
+</div>
+<div id="ref-steinhilber2023a" class="csl-entry">
+Steinhilber, M., Schnuerch, M., &amp; Schubert, A.-L. (2023). Sequential
+one-way <span>ANOVA</span>: <span>Increasing</span> efficiency in
+psychological hypothesis testing using a variant of sequential
+probability ratio tests. <em>PsyArXiv</em>. <a href="https://doi.org/10.31234/osf.io/m64ne">https://doi.org/10.31234/osf.io/m64ne</a>
+</div>
+<div id="ref-wald1945" class="csl-entry">
+Wald, A. (1945). Sequential tests of statistical hypotheses. <em>The
+Annals of Mathematical Statistics</em>, <em>16</em>(2), 117–186.
+</div>
+<div id="ref-wald1947" class="csl-entry">
+Wald, Abraham. (1947). <em>Sequential analysis</em>. <span>Wiley</span>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

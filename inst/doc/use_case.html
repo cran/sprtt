@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Meike Steinhilber" />
+
+<meta name="date" content="2023-07-06" />
+
+<title>Use Case</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Use Case</h1>
+<h4 class="author">Meike Steinhilber</h4>
+<h4 class="date">2023-07-06</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#note" id="toc-note">Note</a></li>
+<li><a href="#overview" id="toc-overview">Overview</a></li>
+<li><a href="#use-case" id="toc-use-case">Use Case</a>
+<ul>
+<li><a href="#hypothesis" id="toc-hypothesis">Hypothesis</a></li>
+<li><a href="#data-analysis" id="toc-data-analysis">Data
+Analysis</a></li>
+<li><a href="#report-results" id="toc-report-results">Report
+Results</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div id="note" class="section level2">
+<h2>Note</h2>
+<ul>
+<li><p>The data set <code>df_stress</code> is included in the
+<code>sprtt</code> package. Thus, the data set is available when the
+package is loaded.</p></li>
+<li><p>In the R code sections:</p>
+<ul>
+<li><code># comment</code>: is a comment</li>
+<li><code>function()</code>: is R code</li>
+<li><code>#&gt; results of function()</code>: is console output</li>
+</ul></li>
+</ul>
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <code>sprtt</code> package is a <strong>s</strong>equential
+<strong>p</strong>robability <strong>r</strong>atio
+<strong>t</strong>ests toolbox (<strong>sprtt</strong>). This vignette
+describes an exemplary use case to improve the understanding of the
+package and the sequential t-test.</p>
+<p>Other recommended vignettes cover:</p>
+<ul>
+<li><p><a href="https://meikesteinhilber.github.io/sprtt/articles/sequential_testing.html">the
+theoretical background</a> and</p></li>
+<li><p>a <a href="https://meikesteinhilber.github.io/sprtt/articles/usage-sprtt.html">general
+guide</a>, how to use the package.</p></li>
+</ul>
+</div>
+<div id="use-case" class="section level2">
+<h2>Use Case</h2>
+<p>A team of researchers wants to know if the stress of the employees
+increased in the company itFlow AG over the last year. The Human
+Resources department has gathered data from a new self-care tool they
+implemented for the employees. It is difficult to predict how many
+employees will participate at the second measurement point (one year
+after the baseline). The team suggests using a sequential
+<em>t</em>-test instead of a Students <em>t</em>-test, because the
+sequential procedure can reduce the required sample size and is stopped
+right after the decision for one of the hypotheses is made. Furthermore,
+the sequential <em>t</em>-test is able to gather evidence for both the
+alternative and the null hypothesis.</p>
+<div id="hypothesis" class="section level3">
+<h3>Hypothesis</h3>
+<p>The researchers know that the company has received more orders than
+in the year before. Thus, they expect an increase in self-reported
+stress.</p>
+</div>
+<div id="data-analysis" class="section level3">
+<h3>Data Analysis</h3>
+<p>The parameters of the sequential <em>t</em>-test are specified as
+follows:</p>
+<ul>
+<li><p>The researchers expect an increase in stress but they have no
+prior knowledge about the expected effect size. Thus, they define the
+lower limit of a substantial effect of interest.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.2</span></span></code></pre></div></li>
+<li><p>They choose the common <span class="math inline">\(\alpha\)</span> level of .05 and the same level
+for the <span class="math inline">\(\beta\)</span> error probability,
+which leads to a power of .95 (<span class="math inline">\(1 -
+\beta\)</span>).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fl">0.95</span></span></code></pre></div></li>
+<li><p>The data are repeated measures, therefore the test is a paired
+sequential <em>t</em>-test.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>paired <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code></pre></div></li>
+<li><p>The researchers expect that the stress will have increased after
+one year. Thus, they specify that the true difference in means is
+greater than 0.<br />
+<code>(mean(one_year_stress) - mean(baseline_stress)) &gt; 0</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>alternative <span class="ot">&lt;-</span> <span class="st">&quot;greater&quot;</span></span></code></pre></div></li>
+</ul>
+<p>The HR department receives the new data piece by piece and passes it
+directly on to the researchers. The test is performed for the first time
+and starts with the first two data points.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># first data from the Human Resources department ---</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co"># current sample size</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co"># get data</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>df <span class="ot">&lt;-</span> df_stress[<span class="dv">1</span><span class="sc">:</span>n_person,]</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># print data</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>df</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;   baseline_stress one_year_stress</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; 1        7.175250        7.844337</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; 2        4.918343        5.527191</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co"># sequential t-test</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">seq_ttest</span>(df<span class="sc">$</span>one_year_stress,</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>                     df<span class="sc">$</span>baseline_stress,</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>                     <span class="at">alpha =</span> alpha,</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>                     <span class="at">power =</span> power,</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>                     <span class="at">d =</span> d,</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>                     <span class="at">paired =</span> paired,</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>                     <span class="at">alternative =</span> alternative,</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co"># print results: console output</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>results</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; *****  Sequential Paired t-test *****</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; formula: df$one_year_stress and  df$baseline_stress</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; test statistic:</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;  log-likelihood ratio = 0.332, decision = continue sampling</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; SPRT thresholds:</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;  lower log(B) = -2.944, upper log(A) = 2.944</span></span></code></pre></div>
+<p>The decision from the first test is:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>results<span class="sc">@</span>decision</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;continue sampling&quot;</span></span></code></pre></div>
+<p>As a result, the researchers take one more data point and run the
+test again.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># new data from the Human Resources department ---</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># get one more person</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> n_person <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> df_stress[<span class="dv">1</span><span class="sc">:</span>n_person,]</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co"># print new data</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>df</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;   baseline_stress one_year_stress</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 1        7.175250        7.844337</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 2        4.918343        5.527191</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 3        4.634266        5.783046</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co"># sequential t-test</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">seq_ttest</span>(df<span class="sc">$</span>one_year_stress,</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>                     df<span class="sc">$</span>baseline_stress,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>                     <span class="at">alpha =</span> alpha,</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>                     <span class="at">power =</span> power,</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>                     <span class="at">d =</span> d,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>                     <span class="at">paired =</span> paired,</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>                     <span class="at">alternative =</span> alternative,</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co"># print results</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>results<span class="sc">@</span>decision</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; [1] &quot;continue sampling&quot;</span></span></code></pre></div>
+<p>This process is repeated until the decision is made for one of the
+two hypotheses. To simulate this sequential process, a while-loop
+embraces the sequential <em>t</em>-test function in the code below,
+which will not stop until one of the hypotheses is accepted or the
+maximum of the data is reached.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># define the starting point</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>decision <span class="ot">&lt;-</span> <span class="st">&quot;continue sampling&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>n_person <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># simulation of the sequential procedure</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="cf">while</span>(decision <span class="sc">==</span> <span class="st">&quot;continue sampling&quot;</span>) {</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="co"># get the current data</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  df <span class="ot">&lt;-</span> df_stress[<span class="dv">1</span><span class="sc">:</span>n_person,]</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  </span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="co"># run the sequential test and save the results</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">seq_ttest</span>(df<span class="sc">$</span>one_year_stress,</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>                       df<span class="sc">$</span>baseline_stress,</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>                       <span class="at">alpha =</span> alpha,</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>                       <span class="at">power =</span> power,</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>                       <span class="at">d =</span> d,</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>                       <span class="at">paired =</span> paired,</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>                       <span class="at">alternative =</span> alternative)</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="co"># save the current desicion</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>  decision <span class="ot">&lt;-</span> results<span class="sc">@</span>decision</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>  </span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>  <span class="co"># add a new person</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>  n_person <span class="ot">&lt;-</span> n_person <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  </span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  <span class="co"># break if the maximum of the data is reached</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>  <span class="cf">if</span> (n_person <span class="sc">&gt;</span> <span class="fu">nrow</span>(df_stress)) {</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>  }</span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>}</span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co"># console output</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>results</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; *****  Sequential Paired t-test *****</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; formula: df$one_year_stress and  df$baseline_stress</span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; test statistic:</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt;  log-likelihood ratio = 2.988, decision = accept H1</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; SPRT thresholds:</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt;  lower log(B) = -2.944, upper log(A) = 2.944</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; Log-Likelihood of the:</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt;  alternative hypothesis = -2.238</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="co">#&gt;  null hypothesis = -5.226</span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt; alternative hypothesis: true difference in means is greater than 0.</span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co">#&gt; specified effect size: Cohen&#39;s d = 0.2</span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="co">#&gt; degrees of freedom: df = 47</span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a><span class="co">#&gt; mean difference </span></span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a><span class="co">#&gt;         0.47931 </span></span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a><span class="co">#&gt; *Note: to get access to the object of the results use the @ or [] instead of the $ operator.</span></span></code></pre></div>
+<p>The while-loop comes to an end after 48 data points.</p>
+</div>
+<div id="report-results" class="section level3">
+<h3>Report Results</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Required results for the report</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co"># likelihood ratio (LR)</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>LR <span class="ot">&lt;-</span> <span class="fu">round</span>(results<span class="sc">@</span>likelihood_ratio, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>LR</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [1] 19.85</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># sample size (N) = degrees of freedom +2 (two-samples) or +1 (one-sample &amp; paired)</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>N <span class="ot">&lt;-</span> results<span class="sc">@</span>df <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>N</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; [1] 48</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># baseline stress (M and SD)</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>mean_t1 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(df<span class="sc">$</span>baseline_stress), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>mean_t1</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; [1] 4.99</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>sd_t1 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sd</span>(df<span class="sc">$</span>baseline_stress), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>sd_t1</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; [1] 1.02</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co"># after one year stress (M and SD)</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>mean_t2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(df<span class="sc">$</span>one_year_stress), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>mean_t2</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt; [1] 5.47</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>sd_t2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sd</span>(df<span class="sc">$</span>one_year_stress), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>sd_t2</span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#&gt; [1] 1.53</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co"># NOT INCLUDED IN THE PACKAGE </span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co"># calculate effect size: Cohen´s d</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a>d_results <span class="ot">&lt;-</span> effsize<span class="sc">::</span><span class="fu">cohen.d</span>(df<span class="sc">$</span>one_year_stress,</span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a>                 df<span class="sc">$</span>baseline_stress,</span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>                 <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">round</span>(d_results<span class="sc">$</span>estimate, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a>d</span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt; [1] 0.34</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co"># confidence intervall</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a>d_lower <span class="ot">&lt;-</span> <span class="fu">round</span>(d_results<span class="sc">$</span>conf.int[[<span class="dv">1</span>]], <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a>d_lower</span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="co">#&gt; [1] 0.11</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a>d_upper <span class="ot">&lt;-</span> <span class="fu">round</span>(d_results<span class="sc">$</span>conf.int[[<span class="dv">2</span>]], <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a>d_upper</span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a><span class="co">#&gt; [1] 0.57</span></span></code></pre></div>
+<p>Starting at <em>N</em> = 2, the test stops sampling at a total sample
+size of <em>N</em> = 48 with <em>LR</em><sub>48</sub> = 19.85. This
+ratio indicates that the data are about 20 times more likely under
+H<sub>1</sub> than under H<sub>0</sub>. Thus, we accept the alternative
+hypothesis: The perceived stress at the second measurement (<em>M</em> =
+5.47, <em>SD</em> = 1.53) is higher than one year ago at the baseline
+measurement (<em>M</em> = 4.99, <em>SD</em> = 1.02), Cohen`s <em>d</em>
+= 0.34, 95% CI [0.11, 0.57].<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a><sup>,</sup><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-schnuerch2020a" class="csl-entry">
+Schnuerch, M., Erdfelder, E., &amp; Heck, D. W. (2020). Sequential
+hypothesis tests for multinomial processing tree models. <em>Journal of
+Mathematical Psychology</em>, <em>95</em>, 102326. <a href="https://doi.org/10.1016/j.jmp.2020.102326">https://doi.org/10.1016/j.jmp.2020.102326</a>
+</div>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>The citation style was taken from <span class="citation">Schnuerch et al. (2020)</span>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Note that this estimate of Cohen’s d as well as the CI
+are based on the assumption of a fixed sample size and, thus, might be
+biased toward an overestimation of the true effect size. See for details
+<span class="citation">Schnuerch et al. (2020)</span>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
